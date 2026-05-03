@@ -88,3 +88,16 @@ describe('favoriteBlogs', () => {
         })
     })
 })
+
+describe('mostBlogs', () => {
+    test('mostblogs returns the author with most posts', () => {
+        expect(listHelper.mostBlogs(blogs)).toEqual({
+            author: 'Robert C. Martin',
+            blogs: 3
+        })
+    })
+
+    test('mostblogs returns null if list is empty', () => {
+        expect(listHelper.mostBlogs([])).toBe(null)
+    })
+})

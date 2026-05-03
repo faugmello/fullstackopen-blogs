@@ -32,4 +32,39 @@ const favoriteBlog = (blogs) => {
     }
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog }
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0) {
+        return null
+    }
+
+    const blogsPerAuthor = new Map()
+
+    blogs.forEach(blog => {
+        const author = blog.author
+        let blogsSoFar
+        if (blogsPerAuthor.has(author)) {
+            blogsSoFar = blogsPerAuthor.get(author) + 1
+        } else {
+            blogsSoFar = 1
+        }
+
+        blogsPerAuthor.set(author, blogsSoFar)
+    })
+
+    let authorWithMostBlogs
+    let highestBlogsCount = 0
+
+    blogsPerAuthor.entries().forEach(bpa => {
+        if (bpa[1] > highestBlogsCount) {
+            authorWithMostBlogs = bpa[0]
+            highestBlogsCount = bpa[1]
+        }
+    })
+
+    return {
+        author: authorWithMostBlogs,
+        blogs: highestBlogsCount
+    }
+}
+
+module.exports = {dummy, totalLikes, favoriteBlog, mostBlogs}
