@@ -90,14 +90,27 @@ describe('favoriteBlogs', () => {
 })
 
 describe('mostBlogs', () => {
-    test('mostblogs returns the author with most posts', () => {
+    test('mostBlogs returns the author with most posts', () => {
         expect(listHelper.mostBlogs(blogs)).toEqual({
             author: 'Robert C. Martin',
             blogs: 3
         })
     })
 
-    test('mostblogs returns null if list is empty', () => {
+    test('mostBlogs returns null if list is empty', () => {
         expect(listHelper.mostBlogs([])).toBe(null)
+    })
+})
+
+describe('mostLikes', () => {
+    test('mostLikes returns the author with most likes', () => {
+        expect(listHelper.mostLikes(blogs)).toEqual({
+            author: 'Edsger W. Dijkstra',
+            likes: 17
+        })
+    })
+
+    test('mostLikes returns null if list is empty', () => {
+        expect(listHelper.mostLikes([])).toBe(null)
     })
 })
