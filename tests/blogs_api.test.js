@@ -102,6 +102,25 @@ describe('post', () => {
         const titles = response.body.map(blog => blog.title)
         expect(titles).toContain(newBlog.title)
     })
+
+    test('likes should be defined or will be 0', async () => {
+        const newBlog = {
+            title: "Some title",
+            author: "Chris P. Bacon",
+            url: "https://www.google.com",
+        }
+
+        await api.post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+
+        const response = await api.get('/api/blogs')
+        response.body.map(blog => {
+            if (blog.title === newBlog.title) {
+                expect(blog.likes).toEqual(0)
+            }
+        })
+    })
 })
 
 afterAll(async () => {
