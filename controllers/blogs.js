@@ -7,10 +7,16 @@ blogsRouter.get('/', async (request, response) => {
     response.json(blogs)
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-    await Blog.findByIdAndDelete(request.params.id)
+blogsRouter.delete('/:title', async (request, response) => {
+    const deletedBlog = await Blog.findOneAndDelete({ title: request.params.title })
+
+    if (!deletedBlog) {
+        return response.status(404).end()
+    }
+
     response.status(204).end()
 })
+
 
 blogsRouter.post('/', async (request, response) => {
     let blog = request.body

@@ -111,10 +111,10 @@ describe('post', () => {
 
 describe('delete', () => {
     test('delete a blog', async () => {
-        let blogsInDb = await api.get('/api/blogs')
-        const blogToDelete = blogsInDb[0]
+        let response = await api.get('/api/blogs')
+        const blogToDelete = response.body.get(0)
         await api
-            .delete(blogToDelete.id)
+            .delete('/api/blogs', blogToDelete.title)
             .expect(204)
 
         blogsInDb = await api.get('api/blogs')
