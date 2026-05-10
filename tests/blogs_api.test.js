@@ -109,6 +109,21 @@ describe('post', () => {
     })
 })
 
+describe('delete', () => {
+    test('delete a blog', async () => {
+        let blogsInDb = await api.get('/api/blogs')
+        const blogToDelete = blogsInDb[0]
+        await api
+            .delete(blogToDelete.id)
+            .expect(204)
+
+        blogsInDb = await api.get('api/blogs')
+        blogsInDb.forEach(blog => {
+            expect(blog).not.toEqual(blogToDelete)
+        })
+    })
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
