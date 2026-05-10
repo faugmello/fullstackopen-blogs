@@ -63,7 +63,7 @@ describe('get', () => {
     test(`there ${initialBlogs.length} blogs`, async () => {
         const response = await api.get('/api/blogs')
 
-        expect(response.body.length).toBe(initialBlogs.length)
+        expect(response.body).toHaveLength(initialBlogs.length)
     })
 
     test(`a specific blog is within the returned blogs`, async () => {
@@ -71,6 +71,15 @@ describe('get', () => {
 
         const titles = response.body.map(blog => blog.title)
         expect(titles).toContain(initialBlogs[2].title)
+    })
+
+    test(`blogs has property id, not _id`, async () => {
+        const response = await api.get('/api/blogs')
+
+        response.body.forEach(blog => {
+            expect(blog.id).toBeDefined()
+            expect(blog._id).toBeUndefined()
+        })
     })
 })
 
