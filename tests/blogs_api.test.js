@@ -112,15 +112,28 @@ describe('post', () => {
 describe('delete', () => {
     test('delete a blog', async () => {
         let response = await api.get('/api/blogs')
-        const blogToDelete = response.body.get(0)
+        const blogToDelete = response.body[0]
         await api
-            .delete('/api/blogs', blogToDelete.title)
+            .delete(`/api/blogs/${encodeURIComponent(blogToDelete.title)}`)
             .expect(204)
 
-        blogsInDb = await api.get('api/blogs')
-        blogsInDb.forEach(blog => {
+        response = await api.get('/api/blogs')
+        response.body.forEach(blog => {
             expect(blog).not.toEqual(blogToDelete)
         })
+    })
+
+
+    test('try to delete a blog that is not in the db', async () => {
+        const blogToDelete = {
+            title: "Some blog post",
+            author: "Chris P. Bacon",
+            url: "https://www.google.com",
+            likes: 20
+        }
+        await api
+            .delete(`/api/blogs/${encodeURIComponent(blogToDelete.title)}`)
+            .expect(404)
     })
 })
 
