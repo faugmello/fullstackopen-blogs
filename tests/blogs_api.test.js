@@ -83,6 +83,27 @@ describe('get', () => {
     })
 })
 
+describe('post', () => {
+    test('new blog is created', async () => {
+        const newBlog = {
+            title: "Some title",
+            author: "Chris P. Bacon",
+            url: "https://www.google.com",
+            likes: 1
+        }
+
+        await api.post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+
+        const response = await api.get('/api/blogs')
+
+        expect(response.body).toHaveLength(initialBlogs.length + 1)
+        const titles = response.body.map(blog => blog.title)
+        expect(titles).toContain(newBlog.title)
+    })
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
