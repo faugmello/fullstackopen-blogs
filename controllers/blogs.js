@@ -11,7 +11,13 @@ blogsRouter.post('/', async (request, response) => {
     let blog = request.body
     logger.info(blog)
 
-    if (blog.likes === undefined) {
+    if (blog.title === undefined) {
+        response.status(400).send({ error: "field title is required" }).end()
+        return
+    } else if (blog.url === undefined) {
+        response.status(400).send({ error: "field url is required" }).end()
+        return
+    } else if (blog.likes === undefined) {
         blog = new Blog({...blog, likes: 0})
     } else {
         blog = new Blog(blog)

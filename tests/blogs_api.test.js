@@ -121,6 +121,18 @@ describe('post', () => {
             }
         })
     })
+
+    test('request should fail if blog dont have a title or a url', async () => {
+        const newBlog = {
+            author: "Chris P. Bacon",
+            likes: 20
+        }
+
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+    })
 })
 
 afterAll(async () => {
