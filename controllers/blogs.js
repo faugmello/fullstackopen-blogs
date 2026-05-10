@@ -7,6 +7,30 @@ blogsRouter.get('/', async (request, response) => {
     response.json(blogs)
 })
 
+blogsRouter.patch('/:title', async (request, response) => {
+    if (!request.body) {
+        return response.status(400).json({ error: 'content missing' })
+    }
+
+    const { likes } = request.body
+
+    if (likes === undefined) {
+        return response.status(400).send({ error: 'likes field is required' }).end()
+    }
+
+    const updatedBlog = await Blog.findOneAndUpdate(
+        { title: request.params.title },
+        { likes: likes },
+        { new: true, runValidators: true }
+    )
+
+    if (!updatedBlog) {
+        return response.status(404).end()
+    }
+
+    response.json(updatedBlog)
+})
+
 blogsRouter.delete('/:title', async (request, response) => {
     const deletedBlog = await Blog.findOneAndDelete({ title: request.params.title })
 
@@ -23,11 +47,9 @@ blogsRouter.post('/', async (request, response) => {
     logger.info(blog)
 
     if (blog.title === undefined) {
-        response.status(400).send({ error: "field title is required" }).end()
-        return
+        return response.status(400).send({ error: "field title is required" }).end()
     } else if (blog.url === undefined) {
-        response.status(400).send({ error: "field url is required" }).end()
-        return
+        return response.status(400).send({ error: "field url is required" }).end()
     } else if (blog.likes === undefined) {
         blog = new Blog({...blog, likes: 0})
     } else {

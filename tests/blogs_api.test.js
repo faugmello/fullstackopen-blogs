@@ -137,6 +137,47 @@ describe('delete', () => {
     })
 })
 
+describe('patch', () => {
+    test('update likes of a blog', async () => {
+        const getResponse = await api.get('/api/blogs')
+        const blogToUpdate = getResponse.body[0]
+
+        const response = await api
+            .patch(`/api/blogs/${encodeURIComponent(blogToUpdate.title)}`)
+            .send({likes: blogToUpdate.likes + 1})
+            .expect(200)
+
+        expect(response.body.likes).toBe(blogToUpdate.likes + 1)
+        expect(response.body.title).toBe(blogToUpdate.title)
+    })
+
+    test('try to update likes of a blog without sending likes in the body', async () => {
+        const getResponse = await api.get('/api/blogs')
+        const blogToUpdate = getResponse.body[0]
+
+        await api
+            .patch(`/api/blogs/${encodeURIComponent(blogToUpdate.title)}`)
+            .send({})
+            .expect(400)
+    })
+
+    test('try to update likes of a blog without a body in the request', async () => {
+        const getResponse = await api.get('/api/blogs')
+        const blogToUpdate = getResponse.body[0]
+
+        await api
+            .patch(`/api/blogs/${encodeURIComponent(blogToUpdate.title)}`)
+            .expect(400)
+    })
+
+    test('try to update likes of a blog that is not in the db', async () => {
+        await api
+            .patch(`/api/blogs/${encodeURIComponent("Some title")}`)
+            .send({likes: 5})
+            .expect(404)
+    })
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })
